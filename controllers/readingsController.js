@@ -30,7 +30,7 @@ exports.generateReading = async (req, res) => {
     Ofrece consejos prácticos y una guía clara sobre sus fortalezas y metas.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.6-flash',
       contents: prompt,
     });
 
