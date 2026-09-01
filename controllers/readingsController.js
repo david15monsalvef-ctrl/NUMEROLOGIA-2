@@ -1,4 +1,4 @@
-const ai = require('../config/gemini');
+const model = require('../config/gemini'); // Importas directamente el modelo configurado
 const Reading = require('../models/Reading');
 const NumerologyProfile = require('../models/NumerologyProfile');
 
@@ -6,7 +6,6 @@ exports.generateReading = async (req, res) => {
   try {
     const { tipo } = req.body;
 
-    // Busca coincidencia ya sea por user_id, usuarioId o userId
     const profile = await NumerologyProfile.findOne({
       $or: [
         { user_id: req.user.id },
@@ -19,7 +18,6 @@ exports.generateReading = async (req, res) => {
       return res.status(400).json({ message: "Debes calcular tu perfil numerológico antes de pedir una lectura." });
     }
 
-    // Mapea las variables soportando camelCase y snake_case
     const numeroVida = profile.numero_vida || profile.numeroVida;
     const numeroExpresion = profile.numero_expresion || profile.numeroExpresion;
     const numeroAlma = profile.numero_alma || profile.numeroAlma;
@@ -31,13 +29,12 @@ exports.generateReading = async (req, res) => {
     
     Ofrece consejos prácticos y una guía clara sobre sus fortalezas y metas.`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
+    // 1. Llamada directa al modelo exportado
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const lecturaTexto = response.text();
 
-    const lecturaTexto = response.text;
-
+    // 2. Guardar la lectura generada
     const nuevaLectura = await Reading.create({
       user_id: req.user.id,
       prompt,
