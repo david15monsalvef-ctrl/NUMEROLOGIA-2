@@ -1,4 +1,4 @@
-const model = require('../config/gemini'); // Importas directamente el modelo configurado
+const ai = require('../config/gemini');
 const Reading = require('../models/Reading');
 const NumerologyProfile = require('../models/NumerologyProfile');
 
@@ -29,12 +29,14 @@ exports.generateReading = async (req, res) => {
     
     Ofrece consejos prácticos y una guía clara sobre sus fortalezas y metas.`;
 
-    // 1. Llamada directa al modelo exportado
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const lecturaTexto = response.text();
+    // Nueva sintaxis compatible con claves AQ...
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
 
-    // 2. Guardar la lectura generada
+    const lecturaTexto = response.text;
+
     const nuevaLectura = await Reading.create({
       user_id: req.user.id,
       prompt,
@@ -43,18 +45,6 @@ exports.generateReading = async (req, res) => {
     });
 
     res.status(201).json(nuevaLectura);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.getHistory = async (req, res) => {
-  try {
-    const history = await Reading.find({ 
-      $or: [{ user_id: req.user.id }, { userId: req.user.id }, { usuarioId: req.user.id }] 
-    }).sort({ fecha: -1, createdAt: -1 });
-    
-    res.json(history);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
