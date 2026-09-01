@@ -1,26 +1,40 @@
+const NumerologyProfile = require('../models/NumerologyProfile');
+const { calcularCaminoDeVida, calcularExpresion, calcularAlma } = require('../utils/numerologyCalculators');
+
 const calculate = async (req, res) => {
   try {
     const userId = req.user ? req.user.id : null;
-    const { fechaNacimiento } = req.body;
+    const { nombreCompleto, fechaNacimiento } = req.body;
 
-    if (!fechaNacimiento) {
-      return res.status(400).json({ error: "La fecha de nacimiento es requerida" });
+    if (!fechaNacimiento || !nombreCompleto) {
+      return res.status(400).json({ error: "El nombre completo y la fecha de nacimiento son requeridos" });
     }
 
-    // Sumar todos los dígitos
-    const digits = fechaNacimiento.replace(/\D/g, '');
-    let sum = digits.split('').reduce((acc, curr) => acc + parseInt(curr), 0);
-
-    // Reducir a un solo dígito o número maestro (11, 22, 33)
-    while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-      sum = sum.toString().split('').reduce((acc, curr) => acc + parseInt(curr), 0);
+    if (!userId) {
+      return res.status(401).json({ error: "Usuario no autenticado" });
     }
 
+    // 1. Calcular los números numerológicos
+    const numeroVida = calcularCaminoDeVida(fechaNacimiento);
+    const numeroExpresion = calcularExpresion(nombreCompleto);
+    const numeroAlma = calcularAlma(nombreCompleto);
+
+    // 2. Guardar o actualizar el perfil en MongoDB
+    const perfil = await NumerologyProfile.findOneAndUpdate(
+      { user_id: userId },
+      { 
+        user_id: userId,
+        numero_vida: numeroVida,
+        numero_expresion: numeroExpresion,
+        numero_alma: numeroAlma
+      },
+      { new: true, upsert: true }
+    );
+
+    // 3. Responder al cliente
     res.json({
-      mensaje: "Cálculo numerológico realizado exitosamente",
-      usuarioId: userId,
-      fechaNacimiento,
-      numeroVida: sum
+      mensaje: "Cálculo numerológico realizado y guardado exitosamente",
+      perfil
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
