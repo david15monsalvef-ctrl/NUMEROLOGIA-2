@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { generateReading, getHistory } = require('../controllers/readingsController');
-const verifyToken = require('../middlewares/authMiddleware'); 
+const readingsController = require('../controllers/readingsController');
+const verifyToken = require('../middlewares/authMiddleware');
 
-router.post('/generate', verifyToken, generateReading);
-if (getHistory) {
-  router.get('/history', verifyToken, getHistory);
+router.post('/generate', verifyToken, readingsController.generateReading);
+
+if (readingsController.getHistory) {
+  router.get('/history', verifyToken, readingsController.getHistory);
 }
 
 module.exports = router;
