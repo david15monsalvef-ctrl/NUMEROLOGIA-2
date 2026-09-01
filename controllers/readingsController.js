@@ -5,16 +5,29 @@ const NumerologyProfile = require('../models/NumerologyProfile');
 exports.generateReading = async (req, res) => {
   try {
     const { tipo } = req.body;
-    const profile = await NumerologyProfile.findOne({ user_id: req.user.id });
+
+    // Busca coincidencia ya sea por user_id, usuarioId o userId
+    const profile = await NumerologyProfile.findOne({
+      $or: [
+        { user_id: req.user.id },
+        { userId: req.user.id },
+        { usuarioId: req.user.id }
+      ]
+    });
 
     if (!profile) {
       return res.status(400).json({ message: "Debes calcular tu perfil numerológico antes de pedir una lectura." });
     }
 
+    // Mapea las variables soportando camelCase y snake_case
+    const numeroVida = profile.numero_vida || profile.numeroVida;
+    const numeroExpresion = profile.numero_expresion || profile.numeroExpresion;
+    const numeroAlma = profile.numero_alma || profile.numeroAlma;
+
     const prompt = `Eres un numerólogo experto. Genera una interpretación ${tipo} para una persona con los siguientes datos:
-    - Número de Camino de Vida: ${profile.numero_vida}
-    - Número de Expresión: ${profile.numero_expresion}
-    - Número de Alma: ${profile.numero_alma}
+    - Número de Camino de Vida: ${numeroVida}
+    - Número de Expresión: ${numeroExpresion}
+    - Número de Alma: ${numeroAlma}
     
     Ofrece consejos prácticos y una guía clara sobre sus fortalezas y metas.`;
 
@@ -40,7 +53,10 @@ exports.generateReading = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
   try {
-    const history = await Reading.find({ user_id: req.user.id }).sort({ fecha: -1 });
+    const history = await Reading.find({ 
+      $or: [{ user_id: req.user.id }, { userId: req.user.id }, { usuarioId: req.user.id }] 
+    }).sort({ fecha: -1, createdAt: -1 });
+    
     res.json(history);
   } catch (error) {
     res.status(500).json({ error: error.message });
