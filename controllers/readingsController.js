@@ -45,19 +45,7 @@ exports.generateReading = async (req, res) => {
 
     res.status(201).json(nuevaLectura);
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Agrega esta función si en tus rutas tienes un GET
-exports.getHistory = async (req, res) => {
-  try {
-    const history = await Reading.find({
-      $or: [{ user_id: req.user.id }, { userId: req.user.id }, { usuarioId: req.user.id }]
-    }).sort({ createdAt: -1 });
-
-    res.json(history);
-  } catch (error) {
+    console.error("Error en generateReading:", error);
     res.status(500).json({ error: error.message });
   }
 };
