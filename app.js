@@ -20,4 +20,9 @@ app.use('/api/v1/numerology', numerologyRoutes);
 app.use('/api/v1/readings', readingsRoutes);
 app.use('/api/v1/compatibility', compatibilityRoutes);
 
+// Ruta raíz añadida
+app.get('/', (req, res) => {
+  res.json({ message: "Bienvenido a la API de Numerología funcionando al 100%" });
+});
+
 module.exports = app;
