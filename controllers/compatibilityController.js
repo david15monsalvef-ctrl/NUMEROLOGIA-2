@@ -55,10 +55,10 @@ const checkCompatibility = async (req, res) => {
     let interpretacionIA = "Análisis no disponible";
 
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-      });
+     const response = await ai.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: prompt,
+    });
       interpretacionIA = response.text;
     } catch (aiError) {
       console.log("Aviso: Gemini no respondió, se entregará el cálculo numérico.", aiError.message);
