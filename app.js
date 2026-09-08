@@ -1,7 +1,11 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
 app.use(express.json());
+
+// Servir los archivos estáticos de la interfaz desde la carpeta 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
 const auditLogger = require('./middlewares/auditLogger');
 const authRoutes = require('./routes/authRoutes');
@@ -20,8 +24,9 @@ app.use('/api/v1/numerology', numerologyRoutes);
 app.use('/api/v1/readings', readingsRoutes);
 app.use('/api/v1/compatibility', compatibilityRoutes);
 
-// Ruta raíz añadida
-app.get('/', (req, res) => {
+// La ruta raíz anterior que devolvía JSON fue eliminada para que Express cargue el index.html automáticamente.
+// Si quieres mantener el mensaje de bienvenida de la API en formato JSON, puedes usar otra ruta como /api/status:
+app.get('/api/status', (req, res) => {
   res.json({ message: "Bienvenido a la API de Numerología funcionando al 100%" });
 });
 
