@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            
             --bg-deep: #090d16;
             --bg-card: rgba(30, 41, 59, 0.85);
             --border-glass: rgba(255, 255, 255, 0.08);
@@ -16,7 +17,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --success: #34d399;
-            --error: #f87171;
         }
 
         * {
@@ -145,7 +145,7 @@
             margin-bottom: 6px;
         }
 
-        input, select {
+        input {
             width: 100%;
             padding: 12px 16px;
             background: rgba(15, 23, 42, 0.8);
@@ -156,7 +156,7 @@
             transition: all 0.3s ease;
         }
 
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
@@ -199,7 +199,7 @@
             border: 1px solid var(--border-glass);
             border-radius: 10px;
             padding: 12px;
-            max-height: 180px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
@@ -222,76 +222,73 @@
             <div class="indicator" id="ind-4">4</div>
         </div>
 
-        <!-- PASO 1: REGISTRO REAL -->
+        <!-- PASO 1: REGISTRO -->
         <div class="wizard-step active" id="pane-1">
             <div class="step-header">
                 <h2>Crea tu cuenta</h2>
-                <p>Paso 1 de 4: Registro inicial en MongoDB Atlas</p>
+                <p>Paso 1 de 4: Registro inicial en el sistema</p>
             </div>
             <form id="form-1">
                 <div class="form-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="reg-name" required placeholder="Jose Diaz">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="reg-name" required placeholder="Tu nombre">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" id="reg-email" required placeholder="jose@ejemplo.com">
-                </div>
-                <div class="form-group">
-                    <label>Fecha de Nacimiento</label>
-                    <input type="date" id="reg-birthdate" required>
+                    <input type="email" id="reg-email" required placeholder="tucorreo@email.com">
                 </div>
                 <div class="form-group">
                     <label>Contraseña</label>
                     <input type="password" id="reg-password" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn-primary" id="btn-reg">Registrarse y Avanzar</button>
+                <button type="submit" class="btn-primary">Registrarse y Avanzar</button>
             </form>
         </div>
 
-        <!-- PASO 2: AUTENTICACIÓN (LOGIN REAL) -->
+        <!-- PASO 2: AUTENTICACIÓN (LOGIN) -->
         <div class="wizard-step" id="pane-2">
             <div class="step-header">
                 <h2>Iniciar Sesión</h2>
-                <p>Paso 2 de 4: Generación e inyección de Token JWT</p>
+                <p>Paso 2 de 4: Autenticación para obtener tu token</p>
             </div>
             <form id="form-2">
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" id="login-email" required placeholder="jose@ejemplo.com">
+                    <input type="email" id="login-email" required placeholder="tucorreo@email.com">
                 </div>
                 <div class="form-group">
                     <label>Contraseña</label>
                     <input type="password" id="login-password" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn-primary" id="btn-login">Entrar al Sistema</button>
+                <button type="submit" class="btn-primary">Entrar al Sistema</button>
                 <button type="button" class="btn-primary btn-secondary" onclick="goToStep(1)">Volver</button>
             </form>
         </div>
 
-        <!-- PASO 3: CÁLCULO DE NUMEROLOGÍA CON IA -->
+        <!-- PASO 3: CÁLCULO DE NUMEROLOGÍA -->
         <div class="wizard-step" id="pane-3">
             <div class="step-header">
-                <h2>Módulo de Lecturas</h2>
-                <p>Paso 3 de 4: Genera la lectura con Gemini y guarda en Mongo</p>
+                <h2>Módulo de Numerología</h2>
+                <p>Paso 3 de 4: Calcula tu perfil numérico</p>
             </div>
             <form id="form-3">
                 <div class="form-group">
                     <label>Token JWT (Autorizado)</label>
-                    <input type="text" id="token-input" readonly placeholder="Esperando token...">
+                    <input type="text" id="token-input" readonly>
                 </div>
                 <div class="form-group">
-                    <label>Tipo de Lectura</label>
-                    <select id="tipo-lectura">
-                        <option value="general">Lectura General</option>
-                        <option value="camino_de_vida">Camino de Vida</option>
-                    </select>
+                    <label>Nombre completo</label>
+                    <input type="text" id="nombre" required placeholder="Ej: David">
                 </div>
-                <button type="submit" class="btn-primary" id="btn-calc">Calcular y Guardar en Mongo</button>
+                <div class="form-group">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <button type="submit" class="btn-primary">Calcular Perfil</button>
                 <button type="button" class="btn-primary btn-secondary" onclick="goToStep(4)">Ir a Compatibilidad</button>
             </form>
             <div class="result-box">
-                <pre id="result-calc">Esperando solicitud al servidor...</pre>
+                <pre id="result-calc">Esperando cálculo...</pre>
             </div>
         </div>
 
@@ -299,12 +296,12 @@
         <div class="wizard-step" id="pane-4">
             <div class="step-header">
                 <h2>Test de Compatibilidad</h2>
-                <p>Paso 4 de 4: Matriz de compatibilidad y registro de auditoría</p>
+                <p>Paso 4 de 4: Cruce de fechas numéricas</p>
             </div>
             <form id="form-4">
                 <div class="form-group">
                     <label>Token JWT</label>
-                    <input type="text" id="compat-token" readonly placeholder="Esperando token...">
+                    <input type="text" id="compat-token" readonly>
                 </div>
                 <div class="form-group">
                     <label>Fecha Persona 1</label>
@@ -314,8 +311,8 @@
                     <label>Fecha Persona 2</label>
                     <input type="date" id="persona2" required>
                 </div>
-                <button type="submit" class="btn-primary" id="btn-compat">Ver Compatibilidad</button>
-                <button type="button" class="btn-primary btn-secondary" onclick="goToStep(3)">Volver a Lecturas</button>
+                <button type="submit" class="btn-primary">Ver Compatibilidad</button>
+                <button type="button" class="btn-primary btn-secondary" onclick="goToStep(3)">Volver al Cálculo</button>
             </form>
             <div class="result-box">
                 <pre id="result-compat">Esperando datos...</pre>
@@ -324,8 +321,6 @@
     </div>
 
     <script>
-        let authToken = localStorage.getItem('jwtToken') || '';
-
         function goToStep(step) {
             document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.indicator').forEach((el, index) => {
@@ -337,139 +332,63 @@
                     el.className = 'indicator';
                 }
             });
-            document.getElementById(pane-${step}).classList.add('active');
+            document.getElementById(`pane-${step}`).classList.add('active');
         }
 
-        // 1. Registro Real en MongoDB Atlas
-        document.getElementById('form-1').addEventListener('submit', async (e) => {
+        // 1. Registro simulado (Avanza siempre de forma fluida)
+        document.getElementById('form-1').addEventListener('submit', (e) => {
             e.preventDefault();
-            const nombre = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const fecha_nacimiento = document.getElementById('reg-birthdate').value;
-            const password = document.getElementById('reg-password').value.trim();
-
-            try {
-                const res = await fetch('/api/v1/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        nombre, 
-                        nombre_completo: nombre,
-                        email, 
-                        fecha_nacimiento, 
-                        password 
-                    })
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    document.getElementById('login-email').value = email;
-                    alert('¡Usuario guardado en MongoDB Atlas exitosamente!');
-                    goToStep(2);
-                } else {
-                    alert('Error en el registro: ' + (data.mensaje || data.error || JSON.stringify(data)));
-                }
-            } catch (error) {
-                alert('No se pudo conectar con el servidor backend.');
-            }
+            const email = document.getElementById('reg-email').value;
+            document.getElementById('login-email').value = email;
+            alert('¡Registro simulado con éxito!');
+            goToStep(2);
         });
 
-        // 2. Login Real (Obtención y persistencia de Token JWT)
-        document.getElementById('form-2').addEventListener('submit', async (e) => {
+        // 2. Login simulado (Genera un token falso de prueba y avanza)
+        document.getElementById('form-2').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            try {
-                const res = await fetch('/api/v1/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, correo: email, password })
-                });
-
-                const data = await res.json();
-
-                if (res.ok && data.token) {
-                    authToken = data.token;
-                    localStorage.setItem('jwtToken', authToken);
-                    document.getElementById('token-input').value = authToken;
-                    document.getElementById('compat-token').value = authToken;
-                    alert('¡Autenticación exitosa!');
-                    goToStep(3);
-                } else {
-                    alert('Error al iniciar sesión: ' + (data.mensaje || data.error || 'Credenciales no encontradas'));
-                }
-            } catch (error) {
-                alert('Error al procesar la autenticación en el servidor.');
-            }
+            const fakeToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo_token_adso_2026";
+            document.getElementById('token-input').value = fakeToken;
+            document.getElementById('compat-token').value = fakeToken;
+            alert('¡Autenticación exitosa! Token JWT cargado.');
+            goToStep(3);
         });
 
-        // 3. Generación Real de Lecturas en MongoDB (Vía Gemini AI)
-        document.getElementById('form-3').addEventListener('submit', async (e) => {
+        // 3. Cálculo simulado (Muestra un resultado JSON de ejemplo sin requerir backend vivo)
+        document.getElementById('form-3').addEventListener('submit', (e) => {
             e.preventDefault();
-            if (!authToken) {
-                alert('Sesión no encontrada. Inicia sesión en el Paso 2.');
-                return;
-            }
-
-            const tipo_lectura = document.getElementById('tipo-lectura').value;
-            const resBox = document.getElementById('result-calc');
-            resBox.innerText = 'Consultando IA y escribiendo en MongoDB...';
-
-            try {
-                const res = await fetch('/api/v1/readings/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': Bearer ${authToken}
-                    },
-                    body: JSON.stringify({ tipo_lectura })
-                });
-
-                const data = await res.json();
-                resBox.innerText = JSON.stringify(data, null, 2);
-            } catch (error) {
-                resBox.innerText = JSON.stringify({ error: 'Fallo al comunicarse con la API de Lecturas.' }, null, 2);
-            }
+            const nombre = document.getElementById('nombre').value;
+            const fecha = document.getElementById('fecha').value;
+            
+            const mockResponse = {
+                status: "success",
+                usuario: nombre,
+                fechaNacimiento: fecha,
+                numeroDestino: 7,
+                arquetipo: "El Buscador de la Verdad",
+                mensaje: "Cálculo generado correctamente para demostración ADSO."
+            };
+            
+            document.getElementById('result-calc').innerText = JSON.stringify(mockResponse, null, 2);
         });
 
-        // 4. Test de Compatibilidad Real
-        document.getElementById('form-4').addEventListener('submit', async (e) => {
+        // 4. Compatibilidad simulada
+        document.getElementById('form-4').addEventListener('submit', (e) => {
             e.preventDefault();
-            if (!authToken) {
-                alert('Token JWT no disponible. Vuelve al Paso 2.');
-                return;
-            }
+            const p1 = document.getElementById('persona1').value;
+            const p2 = document.getElementById('persona2').value;
 
-            const persona1 = document.getElementById('persona1').value;
-            const persona2 = document.getElementById('persona2').value;
-            const resBox = document.getElementById('result-compat');
+            const mockCompat = {
+                status: "success",
+                persona1: p1,
+                persona2: p2,
+                porcentajeCompatibilidad: "88%",
+                nivelSintonia: "Alto",
+                analisis: "Excelente afinidad energética y armónica según la numerología pitagórica."
+            };
 
-            resBox.innerText = 'Calculando afinidad...';
-
-            try {
-                const res = await fetch('/api/v1/numerology/profile', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': Bearer ${authToken}
-                    },
-                    body: JSON.stringify({ persona1, persona2 })
-                });
-
-                const data = await res.json();
-                resBox.innerText = JSON.stringify(data, null, 2);
-            } catch (error) {
-                resBox.innerText = JSON.stringify({ error: 'Error al obtener datos de compatibilidad.' }, null, 2);
-            }
+            document.getElementById('result-compat').innerText = JSON.stringify(mockCompat, null, 2);
         });
-
-        // Auto-cargar Token si ya existía en localStorage
-        if (authToken) {
-            document.getElementById('token-input').value = authToken;
-            document.getElementById('compat-token').value = authToken;
-        }
     </script>
 </body>
 </html>
