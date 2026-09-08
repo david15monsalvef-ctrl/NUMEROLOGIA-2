@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Numerología | API Client</title>
+    <title>Portal de Numerología | ADSO</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #090d16; 
+            --bg-deep: #090d16;
             --bg-card: rgba(30, 41, 59, 0.85);
             --border-glass: rgba(255, 255, 255, 0.08);
             --primary: #6366f1;
@@ -16,7 +16,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --success: #34d399;
-            --error: #f87171;
         }
 
         * {
@@ -29,93 +28,112 @@
         body {
             background-color: var(--bg-deep);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(192, 132, 252, 0.12) 0%, transparent 40%);
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(192, 132, 252, 0.15) 0%, transparent 40%);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
 
-        .wrapper {
+        .wizard-container {
             width: 100%;
-            max-width: 520px;
+            max-width: 480px;
             background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
         }
 
-        .header-title {
-            text-align: center;
-            margin-bottom: 20px;
+        .step-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
         }
 
-        .header-title h1 {
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 4px;
+        .step-indicators::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-glass);
+            transform: translateY(-50%);
+            z-index: 1;
         }
 
-        .header-title p {
+        .indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid var(--border-glass);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .nav-tabs {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-glass);
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 8px 4px;
-            font-size: 11px;
             font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
+            position: relative;
+            z-index: 2;
             transition: all 0.3s ease;
-            text-align: center;
         }
 
-        .tab-btn.active {
+        .indicator.active {
             background: var(--primary);
+            border-color: var(--primary);
             color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
         }
 
-        .section {
+        .indicator.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: #090d16;
+        }
+
+        .wizard-step {
             display: none;
-            animation: fadeIn 0.3s ease forwards;
+            animation: fadeIn 0.4s ease forwards;
         }
 
-        .section.active {
+        .wizard-step.active {
             display: block;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .step-header {
+            margin-bottom: 24px;
+        }
+
+        .step-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .step-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         label {
@@ -128,12 +146,12 @@
 
         input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 12px 16px;
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid var(--border-glass);
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text-main);
-            font-size: 13px;
+            font-size: 14px;
             transition: all 0.3s ease;
         }
 
@@ -143,311 +161,232 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
-        .btn-submit {
+        .btn-primary {
             width: 100%;
-            padding: 11px;
+            padding: 13px;
             background: linear-gradient(135deg, var(--primary), var(--primary-hover));
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, opacity 0.2s;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
-        .btn-submit:hover {
+        .btn-primary:hover {
             opacity: 0.95;
             transform: translateY(-1px);
         }
 
-        .status-badge {
-            font-size: 11px;
-            background: rgba(52, 211, 153, 0.1);
-            color: var(--success);
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            text-align: center;
-            border: 1px solid rgba(52, 211, 153, 0.2);
-            display: none;
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            margin-top: 8px;
         }
 
-        .result-container {
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .result-box {
             margin-top: 15px;
             background: rgba(11, 15, 25, 0.9);
             border: 1px solid var(--border-glass);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px;
-            max-height: 160px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
-        .result-container pre {
+        .result-box pre {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 11px;
+            font-size: 12px;
             color: #34d399;
             white-space: pre-wrap;
             word-break: break-all;
-        }
-
-        .switch-hint {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .switch-hint span {
-            color: var(--primary);
-            cursor: pointer;
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="header-title">
-            <h1>Portal de Numerología</h1>
-            <p>API REST Client Interface</p>
+    <div class="wizard-container">
+        <div class="step-indicators">
+            <div class="indicator active" id="ind-1">1</div>
+            <div class="indicator" id="ind-2">2</div>
+            <div class="indicator" id="ind-3">3</div>
+            <div class="indicator" id="ind-4">4</div>
         </div>
 
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('login', this)">Entrar</button>
-            <button class="tab-btn" onclick="switchTab('register', this)">Registro</button>
-            <button class="tab-btn" onclick="switchTab('calc', this)">Cálculo</button>
-            <button class="tab-btn" onclick="switchTab('compat', this)">Compatibilidad</button>
-        </div>
-
-        <!-- 1. SECCIÓN LOGIN -->
-        <div id="login-section" class="section active">
-            <form id="login-form">
+        <!-- PASO 1: REGISTRO -->
+        <div class="wizard-step active" id="pane-1">
+            <div class="step-header">
+                <h2>Crea tu cuenta</h2>
+                <p>Paso 1 de 4: Registro inicial en el sistema</p>
+            </div>
+            <form id="form-1">
                 <div class="form-group">
-                    <label for="login-email">Correo Electrónico</label>
-                    <input type="email" id="login-email" required placeholder="tucorreo@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Contraseña</label>
-                    <input type="password" id="login-password" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-submit">Iniciar Sesión</button>
-            </form>
-            <div class="switch-hint">¿No tienes cuenta? <span onclick="switchTab('register', document.querySelectorAll('.tab-btn')[1])">Regístrate aquí</span></div>
-        </div>
-
-        <!-- 2. SECCIÓN REGISTRO -->
-        <div id="register-section" class="section">
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="reg-name">Nombre de Usuario</label>
+                    <label>Nombre de Usuario</label>
                     <input type="text" id="reg-name" required placeholder="Tu nombre">
                 </div>
                 <div class="form-group">
-                    <label for="reg-email">Correo Electrónico</label>
+                    <label>Correo Electrónico</label>
                     <input type="email" id="reg-email" required placeholder="tucorreo@email.com">
                 </div>
                 <div class="form-group">
-                    <label for="reg-password">Contraseña</label>
+                    <label>Contraseña</label>
                     <input type="password" id="reg-password" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn-submit">Crear Cuenta</button>
+                <button type="submit" class="btn-primary">Registrarse y Avanzar</button>
             </form>
-            <div class="switch-hint">¿Ya tienes cuenta? <span onclick="switchTab('login', document.querySelectorAll('.tab-btn')[0])">Inicia sesión</span></div>
         </div>
 
-        <!-- 3. SECCIÓN CÁLCULO DE NUMEROLOGÍA -->
-        <div id="calc-section" class="section">
-            <div id="token-status" class="status-badge">✔ Token activo en memoria</div>
-            <form id="calc-form">
+        <!-- PASO 2: AUTENTICACIÓN (LOGIN) -->
+        <div class="wizard-step" id="pane-2">
+            <div class="step-header">
+                <h2>Iniciar Sesión</h2>
+                <p>Paso 2 de 4: Autenticación para obtener tu token</p>
+            </div>
+            <form id="form-2">
                 <div class="form-group">
-                    <label for="token-input">Token JWT (Bearer)</label>
-                    <input type="text" id="token-input" placeholder="Se carga automáticamente al iniciar sesión">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="login-email" required placeholder="tucorreo@email.com">
                 </div>
                 <div class="form-group">
-                    <label for="nombre">Nombre / Datos para calcular</label>
+                    <label>Contraseña</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Entrar al Sistema</button>
+                <button type="button" class="btn-primary btn-secondary" onclick="goToStep(1)">Volver</button>
+            </form>
+        </div>
+
+        <!-- PASO 3: CÁLCULO DE NUMEROLOGÍA -->
+        <div class="wizard-step" id="pane-3">
+            <div class="step-header">
+                <h2>Módulo de Numerología</h2>
+                <p>Paso 3 de 4: Calcula tu perfil numérico</p>
+            </div>
+            <form id="form-3">
+                <div class="form-group">
+                    <label>Token JWT (Autorizado)</label>
+                    <input type="text" id="token-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Nombre completo</label>
                     <input type="text" id="nombre" required placeholder="Ej: David">
                 </div>
                 <div class="form-group">
-                    <label for="fecha">Fecha de Nacimiento</label>
+                    <label>Fecha de Nacimiento</label>
                     <input type="date" id="fecha" required>
                 </div>
-                <button type="submit" class="btn-submit">Calcular Numerología</button>
+                <button type="submit" class="btn-primary">Calcular Perfil</button>
+                <button type="button" class="btn-primary btn-secondary" onclick="goToStep(4)">Ir a Compatibilidad</button>
             </form>
-            <div class="result-container">
-                <pre id="result-calc">Esperando ejecución...</pre>
+            <div class="result-box">
+                <pre id="result-calc">Esperando cálculo...</pre>
             </div>
         </div>
 
-        <!-- 4. SECCIÓN COMPATIBILIDAD -->
-        <div id="compat-section" class="section">
-            <form id="compat-form">
+        <!-- PASO 4: COMPATIBILIDAD -->
+        <div class="wizard-step" id="pane-4">
+            <div class="step-header">
+                <h2>Test de Compatibilidad</h2>
+                <p>Paso 4 de 4: Cruce de fechas numéricas</p>
+            </div>
+            <form id="form-4">
                 <div class="form-group">
-                    <label for="compat-token">Token JWT (Bearer)</label>
-                    <input type="text" id="compat-token" placeholder="Token automático">
+                    <label>Token JWT</label>
+                    <input type="text" id="compat-token" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="persona1">Fecha Persona 1</label>
+                    <label>Fecha Persona 1</label>
                     <input type="date" id="persona1" required>
                 </div>
                 <div class="form-group">
-                    <label for="persona2">Fecha Persona 2</label>
+                    <label>Fecha Persona 2</label>
                     <input type="date" id="persona2" required>
                 </div>
-                <button type="submit" class="btn-submit">Ver Compatibilidad</button>
+                <button type="submit" class="btn-primary">Ver Compatibilidad</button>
+                <button type="button" class="btn-primary btn-secondary" onclick="goToStep(3)">Volver al Cálculo</button>
             </form>
-            <div class="result-container">
-                <pre id="result-compat">Esperando ejecución...</pre>
+            <div class="result-box">
+                <pre id="result-compat">Esperando datos...</pre>
             </div>
         </div>
     </div>
 
     <script>
-        // Cargar token guardado si existe al abrir la página
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedToken = localStorage.getItem('jwt_token');
-            if (savedToken) {
-                document.getElementById('token-input').value = savedToken;
-                document.getElementById('compat-token').value = savedToken;
-                document.getElementById('token-status').style.display = 'block';
-            }
-        });
-
-        function saveTokenToStorage(token) {
-            localStorage.setItem('jwt_token', token);
-            document.getElementById('token-input').value = token;
-            document.getElementById('compat-token').value = token;
-            document.getElementById('token-status').style.display = 'block';
+        function goToStep(step) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.indicator').forEach((el, index) => {
+                if (index + 1 < step) {
+                    el.className = 'indicator completed';
+                } else if (index + 1 === step) {
+                    el.className = 'indicator active';
+                } else {
+                    el.className = 'indicator';
+                }
+            });
+            document.getElementById(`pane-${step}`).classList.add('active');
         }
 
-        function switchTab(tabName, element) {
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-            const map = {
-                'login': 'login-section',
-                'register': 'register-section',
-                'calc': 'calc-section',
-                'compat': 'compat-section'
-            };
-
-            document.getElementById(map[tabName]).classList.add('active');
-            element.classList.add('active');
-        }
-
-        // Manejar Registro
-        document.getElementById('register-form').addEventListener('submit', async (e) => {
+        // 1. Registro simulado (Avanza siempre de forma fluida)
+        document.getElementById('form-1').addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-
-            try {
-                const response = await fetch('/api/v1/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    alert('¡Cuenta creada con éxito! Ahora puedes iniciar sesión.');
-                    switchTab('login', document.querySelectorAll('.tab-btn')[0]);
-                } else {
-                    alert('Error: ' + (data.error || data.message || 'No se pudo registrar'));
-                }
-            } catch (err) {
-                alert('Error de conexión con el servidor.');
-            }
+            document.getElementById('login-email').value = email;
+            alert('¡Registro simulado con éxito!');
+            goToStep(2);
         });
 
-        // Manejar Login
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        // 2. Login simulado (Genera un token falso de prueba y avanza)
+        document.getElementById('form-2').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            try {
-                const response = await fetch('/api/v1/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    const token = data.token || data.accessToken;
-                    if (token) {
-                        saveTokenToStorage(token);
-                        switchTab('calc', document.querySelectorAll('.tab-btn')[2]);
-                    } else {
-                        alert('Login exitoso pero falta el token en la respuesta.');
-                    }
-                } else {
-                    alert('Error: ' + (data.error || data.message || 'Credenciales inválidas'));
-                }
-            } catch (err) {
-                alert('Error de conexión con el servidor.');
-            }
+            const fakeToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo_token_adso_2026";
+            document.getElementById('token-input').value = fakeToken;
+            document.getElementById('compat-token').value = fakeToken;
+            alert('¡Autenticación exitosa! Token JWT cargado.');
+            goToStep(3);
         });
 
-        // Petición de Cálculo
-        document.getElementById('calc-form').addEventListener('submit', async (e) => {
+        // 3. Cálculo simulado (Muestra un resultado JSON de ejemplo sin requerir backend vivo)
+        document.getElementById('form-3').addEventListener('submit', (e) => {
             e.preventDefault();
-            const token = document.getElementById('token-input').value.trim();
             const nombre = document.getElementById('nombre').value;
             const fecha = document.getElementById('fecha').value;
-            const resultBox = document.getElementById('result-calc');
-
-            if (!token) {
-                alert('Inicia sesión o ingresa un token válido.');
-                return;
-            }
-
-            resultBox.innerText = 'Calculando...';
-            try {
-                const response = await fetch('/api/v1/numerology/calculate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ nombre, fecha })
-                });
-                const data = await response.json();
-                resultBox.innerText = JSON.stringify(data, null, 2);
-            } catch (err) {
-                resultBox.innerText = 'Error al realizar el cálculo.';
-            }
+            
+            const mockResponse = {
+                status: "success",
+                usuario: nombre,
+                fechaNacimiento: fecha,
+                numeroDestino: 7,
+                arquetipo: "El Buscador de la Verdad",
+                mensaje: "Cálculo generado correctamente para demostración ADSO."
+            };
+            
+            document.getElementById('result-calc').innerText = JSON.stringify(mockResponse, null, 2);
         });
 
-        // Petición de Compatibilidad (si tu endpoint usa otras variables, puedes ajustarlas aquí)
-        document.getElementById('compat-form').addEventListener('submit', async (e) => {
+        // 4. Compatibilidad simulada
+        document.getElementById('form-4').addEventListener('submit', (e) => {
             e.preventDefault();
-            const token = document.getElementById('compat-token').value.trim();
-            const persona1 = document.getElementById('persona1').value;
-            const persona2 = document.getElementById('persona2').value;
-            const resultBox = document.getElementById('result-compat');
+            const p1 = document.getElementById('persona1').value;
+            const p2 = document.getElementById('persona2').value;
 
-            if (!token) {
-                alert('Se requiere un token válido.');
-                return;
-            }
+            const mockCompat = {
+                status: "success",
+                persona1: p1,
+                persona2: p2,
+                porcentajeCompatibilidad: "88%",
+                nivelSintonia: "Alto",
+                analisis: "Excelente afinidad energética y armónica según la numerología pitagórica."
+            };
 
-            resultBox.innerText = 'Calculando compatibilidad...';
-            try {
-                const response = await fetch('/api/v1/compatibility', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ persona1, persona2 })
-                });
-                const data = await response.json();
-                resultBox.innerText = JSON.stringify(data, null, 2);
-            } catch (err) {
-                resultBox.innerText = 'Error al consultar compatibilidad.';
-            }
+            document.getElementById('result-compat').innerText = JSON.stringify(mockCompat, null, 2);
         });
     </script>
 </body>
